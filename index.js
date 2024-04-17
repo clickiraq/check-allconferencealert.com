@@ -13,7 +13,7 @@ const startVenom = async () => {
     venomClient = await create({
       session: "session-name",
     });
-    scrapeConferenceData();
+    setInterval(scrapeConferenceData, 60 * 1000);
   } catch (error) {
     console.log(error);
   }
@@ -48,23 +48,25 @@ async function scrapeConferenceData() {
 
     // Extract data from rows
     const rows = await page.evaluate(() => {
-      const rowData = [];
-      // Accessing the DOM elements within page.evaluate()
-      document.querySelectorAll("tbody tr").forEach(row => {
-        const columns = row.querySelectorAll("td");
-        if (columns.length >= 3) {
-          const link = columns[0].querySelector('a').href;
-          const rowDataItem = {
-            date: columns[0].innerText.trim(),
-            conference: columns[1].innerText.trim(),
-            location: columns[2].innerText.trim(),
-            link: link,
-          };
-          rowData.push(rowDataItem);
+        const rowData = [];
+        // Accessing the DOM elements within page.evaluate()
+        const rows = document.querySelectorAll("tbody tr");
+        for (let i = rows.length - 1; i >= 0; i--) {
+          const row = rows[i];
+          const columns = row.querySelectorAll("td");
+          if (columns.length >= 3) {
+            const link = columns[0].querySelector('a').href;
+            const rowDataItem = {
+              date: columns[0].innerText.trim(),
+              conference: columns[1].innerText.trim(),
+              location: columns[2].innerText.trim(),
+              link: link,
+            };
+            rowData.push(rowDataItem);
+          }
         }
-      });
-      return rowData;
-    });
+        return rowData;
+      });      
 
     // Store data in SQLite database
     const db = new sqlite3.Database('conferences.db');
@@ -116,4 +118,5 @@ async function scrapeConferenceData() {
 }
 
 startVenom();
+
 
