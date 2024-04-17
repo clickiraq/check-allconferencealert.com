@@ -1,0 +1,5 @@
+/node_modules
+/.idea
+/tokens
+# all end .db
+*.db
