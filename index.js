@@ -14,7 +14,7 @@ const startVenom = async () => {
       session: "session-name",
     });
     scrapeConferenceData();
-    setInterval(scrapeConferenceData, 60 * 1000);
+    setInterval(scrapeConferenceData,( 60 * 1000 * 60 * 8));
   } catch (error) {
     console.log(error);
   }
