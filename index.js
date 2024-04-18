@@ -31,9 +31,6 @@ sendTextMessage = async (message, number) => {
   };
 async function scrapeConferenceData() {
   const browser = await puppeteer.launch({
-    headless: false,
-    defaultViewport: null,
-    args: ['--start-maximized'],
   });
   const page = await browser.newPage();
 
