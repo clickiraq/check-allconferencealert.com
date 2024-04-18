@@ -31,8 +31,6 @@ sendTextMessage = async (message, number) => {
   };
 async function scrapeConferenceData() {
   const browser = await puppeteer.launch({
-    executablePath:
-      "/opt/homebrew/Caskroom/chromium/latest/chrome-mac/Chromium.app/Contents/MacOS/Chromium",
     headless: false,
     defaultViewport: null,
     args: ['--start-maximized'],
