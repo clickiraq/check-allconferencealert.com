@@ -31,6 +31,7 @@ sendTextMessage = async (message, number) => {
   };
 async function scrapeConferenceData() {
   const browser = await puppeteer.launch({
+    executablePath: '/usr/bin/chromium-browser',
   });
   const page = await browser.newPage();
 
