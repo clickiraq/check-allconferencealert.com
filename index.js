@@ -11,6 +11,7 @@ let venomClient = null;
 const startVenom = async () => {
   try {
     venomClient = await create({
+      
       session: "session-name",
     });
     scrapeConferenceData();
@@ -25,6 +26,7 @@ sendTextMessage = async (message, number) => {
     try {
       if (venomClient) {
         await venomClient.sendText(number || "9647701516261@c.us", message);
+        // await venomClient.sendText(number || "9647501594292@c.us", message);
       }
     } catch (error) {
       res.json({ success: false, message: "Failed to send message" });
@@ -33,6 +35,7 @@ sendTextMessage = async (message, number) => {
 async function scrapeConferenceData() {
   const browser = await puppeteer.launch({
     executablePath: '/usr/bin/chromium-browser',
+    // headless: true,
   });
   const page = await browser.newPage();
 
@@ -89,10 +92,16 @@ async function scrapeConferenceData() {
       });
 
       if (!existingLink) {
-        // Link does not exist, insert row
         insertStmt.run(row.date, row.conference, row.location, row.link);
-        // Send message to WhatsApp
+        const nowDate = () => {
+          const date = new Date();
+          return `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`;
+        };
+        if (rows.indexOf(row) === 0) {
+          sendTextMessage(`${nowDate()}`);
+        }
         sendTextMessage(`${row.date} - ${row.conference} - ${row.location} - ${row.link}`);
+
       } else {
         console.log(`Link ${row.link} already exists, skipping insertion.`);
       }
